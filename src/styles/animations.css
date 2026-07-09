@@ -97,3 +97,19 @@
     }
   }
 }
+
+/* Twinkling star animation */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+.star-twinkle {
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+/* Apply twinkling stars to hero decorations */
+.hero-deco-star i {
+  animation: twinkle 3.5s ease-in-out infinite;
+}
+
