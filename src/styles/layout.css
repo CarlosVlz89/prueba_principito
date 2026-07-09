@@ -254,6 +254,27 @@ footer {
   color: var(--color-light);
 }
 
+.footer-social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(250, 247, 240, 0.6);
+  font-size: 0.85rem;
+  transition: var(--transition-fast);
+  margin-top: 0.25rem;
+}
+
+.footer-social-link:hover {
+  color: var(--color-light);
+}
+
+.footer-social-link i {
+  color: var(--color-gold);
+  font-size: 1.1rem;
+  width: 20px;
+  text-align: center;
+}
+
 .footer-bottom {
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   padding-top: 30px;
