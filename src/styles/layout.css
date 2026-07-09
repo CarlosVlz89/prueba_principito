@@ -198,6 +198,10 @@ section {
 }
 
 @media (max-width: 768px) {
+  .container {
+    padding: 0 1.25rem;
+  }
+
   .menu-toggle {
     display: block;
     background: none;

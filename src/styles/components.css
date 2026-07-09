@@ -646,3 +646,11 @@
   border-color: var(--color-gold) rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.2);
   box-shadow: var(--shadow-gold);
 }
+
+@media (max-width: 480px) {
+  .schedule-card {
+    min-width: 0;
+    width: 100%;
+    padding: 2rem 1.25rem;
+  }
+}
