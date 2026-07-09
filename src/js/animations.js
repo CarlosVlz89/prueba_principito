@@ -58,4 +58,30 @@ export function initScrollAnimations() {
       el.classList.add("scroll-reveal");
     });
   }
+
+  // 3. Mobile Hamburger Menu Toggle Lógica
+  const menuToggle = document.getElementById("menu-toggle");
+  const navMenu = document.querySelector("header nav");
+  const navLinks = document.querySelectorAll("header nav a");
+
+  if (menuToggle && navMenu) {
+    menuToggle.addEventListener("click", () => {
+      navMenu.classList.toggle("open");
+      const icon = menuToggle.querySelector("i");
+      if (navMenu.classList.contains("open")) {
+        icon.className = "fa-solid fa-xmark";
+      } else {
+        icon.className = "fa-solid fa-bars";
+      }
+    });
+
+    // Close menu when links are clicked
+    navLinks.forEach(link => {
+      link.addEventListener("click", () => {
+        navMenu.classList.remove("open");
+        const icon = menuToggle.querySelector("i");
+        if (icon) icon.className = "fa-solid fa-bars";
+      });
+    });
+  }
 }
