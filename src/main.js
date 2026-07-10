@@ -6,7 +6,7 @@ import './styles/animations.css';
 
 import { initTimer } from './js/timer.js';
 import { initScrollAnimations } from './js/animations.js';
-import { initSurvey, initDataExporter } from './js/survey.js';
+import { initSurvey } from './js/survey.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // Initialize Countdown Timer
@@ -17,7 +17,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize Survey Form controls and privacy modal
   initSurvey();
-
-  // Initialize hidden CSV data exporter for local storage surveys
-  initDataExporter();
 });

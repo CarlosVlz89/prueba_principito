@@ -1,0 +1,13 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /surveys/{document} {
+      // Permitir la creación pública de respuestas (formulario de la landing page)
+      allow create: if true;
+      
+      // Prohibir lecturas, actualizaciones y eliminaciones públicas para proteger la privacidad de los datos
+      allow read, update, delete: if false;
+    }
+  }
+}

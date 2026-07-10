@@ -1,4 +1,6 @@
 /* survey.js - Survey Form Validation, Submission, and Privacy Notice */
+import { db } from "./firebase.js";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 export function initSurvey() {
   const form = document.getElementById("community-survey-form");
@@ -49,7 +51,7 @@ export function initSurvey() {
 
   // Form Submission Logic
   if (form) {
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       // Basic Validation
@@ -72,7 +74,7 @@ export function initSurvey() {
         source,
         attendsBallet,
         newsletter,
-        timestamp: new Date().toISOString()
+        timestamp: serverTimestamp() // Use Firebase server timestamp for security and accuracy
       };
 
       // Show submitting state on button
@@ -81,10 +83,9 @@ export function initSurvey() {
       submitBtn.disabled = true;
       submitBtn.textContent = "Enviando...";
 
-      // Simulate API call (1.5 seconds)
-      setTimeout(() => {
-        // Save to LocalStorage
-        saveSurveyResponse(surveyResponse);
+      try {
+        // Save to Firebase Cloud Firestore
+        await addDoc(collection(db, "surveys"), surveyResponse);
 
         // Hide form and show success message
         if (formCard && successSection) {
@@ -92,67 +93,12 @@ export function initSurvey() {
           successSection.style.display = "block";
           successSection.scrollIntoView({ behavior: "smooth", block: "center" });
         }
-      }, 1500);
+      } catch (error) {
+        console.error("Error al enviar la encuesta:", error);
+        alert("Ocurrió un error al enviar la encuesta. Por favor, asegúrate de que la base de datos Firestore esté activa en tu consola.");
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+      }
     });
   }
-
-  // Helper function to save survey in localStorage
-  function saveSurveyResponse(response) {
-    const key = "ardentia_survey_responses";
-    let existingResponses = localStorage.getItem(key);
-    
-    if (existingResponses) {
-      existingResponses = JSON.parse(existingResponses);
-    } else {
-      existingResponses = [];
-    }
-
-    existingResponses.push(response);
-    localStorage.setItem(key, JSON.stringify(existingResponses));
-  }
-}
-
-// Hidden Feature: Export data as CSV by double-clicking the footer copyright or logo
-export function initDataExporter() {
-  const exportTrigger = document.getElementById("export-data-trigger");
-  if (!exportTrigger) return;
-
-  exportTrigger.addEventListener("dblclick", () => {
-    const key = "ardentia_survey_responses";
-    const data = localStorage.getItem(key);
-
-    if (!data || JSON.parse(data).length === 0) {
-      alert("Aún no hay respuestas de encuestas registradas en este navegador.");
-      return;
-    }
-
-    const responses = JSON.parse(data);
-    
-    // Create CSV Header
-    let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += "Nombre,Correo Electronico,Medio de Entero,Asiste al Ballet,Suscripcion Boletin,Fecha Registro\n";
-
-    // Add rows
-    responses.forEach(row => {
-      const escapedName = `"${row.name.replace(/"/g, '""')}"`;
-      const escapedEmail = `"${row.email.replace(/"/g, '""')}"`;
-      const escapedSource = `"${row.source.replace(/"/g, '""')}"`;
-      const escapedAttends = `"${row.attendsBallet.replace(/"/g, '""')}"`;
-      const newsletterText = row.newsletter ? "Sí" : "No";
-      const dateText = new Date(row.timestamp).toLocaleDateString();
-
-      csvContent += `${escapedName},${escapedEmail},${escapedSource},${escapedAttends},${newsletterText},${dateText}\n`;
-    });
-
-    // Create download link
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `encuestas_el_nino_que_cabalga_asteroides_${new Date().toISOString().slice(0,10)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    alert(`Se han exportado ${responses.length} respuestas exitosamente.`);
-  });
 }
